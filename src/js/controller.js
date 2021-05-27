@@ -60,5 +60,6 @@ const init = function () {
   RecipeView.addHandlerRender(controlRecipes);
   SearchView.addHandlerRender(controlSearchRecipes);
   paginationView.addHandlerClick(controlPagination);
+  console.log(BUG);
 };
 init();
