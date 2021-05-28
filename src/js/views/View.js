@@ -8,13 +8,44 @@ export default class View {
   render(data) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderErrorMsg();
-    // alert('in');
     this._data = data;
     // clearing the parent element of any data
     this._clear();
     // getting the recipe html
     const markup = this._generateMarkup();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+  update(data) {
+    this._data = data;
+    //
+    const newMarkup = this._generateMarkup();
+    // creating a nodelist dom of all html
+    const newDom = document.createRange().createContextualFragment(newMarkup);
+    // selecting all as arrays
+    const newElements = [...newDom.querySelectorAll('*')];
+    const oldElements = [...this._parentElement.querySelectorAll('*')];
+
+    // comparing them
+    // console.log(oldElements);
+    newElements.forEach((newEl, i) => {
+      const curEl = oldElements[i];
+      console.log(curEl, newEl.isEqualNode(curEl));
+
+      // updates changed text only
+      if (
+        !newEl.isEqualNode(curEl) &&
+        newEl.firstChild?.nodeValue.trim() !== ''
+      ) {
+        curEl.textContent = newEl.textContent;
+      }
+
+      // updates changed attributes
+      if (!newEl.isEqualNode(curEl)) {
+        Array.from(newEl.attributes).forEach(attr => {
+          curEl.setAttribute(attr.name, attr.value);
+        });
+      }
+    });
   }
 
   _clear() {
