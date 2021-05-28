@@ -5,14 +5,15 @@ export default class View {
     "Couldn't find any recipe with this id !! Try again with another id";
   _message = '';
 
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderErrorMsg();
     this._data = data;
-    // clearing the parent element of any data
-    this._clear();
     // getting the recipe html
     const markup = this._generateMarkup();
+    if (!render) return markup;
+    // clearing the parent element of any data
+    this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
   update(data) {
@@ -29,7 +30,6 @@ export default class View {
     // console.log(oldElements);
     newElements.forEach((newEl, i) => {
       const curEl = oldElements[i];
-      console.log(curEl, newEl.isEqualNode(curEl));
 
       // updates changed text only
       if (
